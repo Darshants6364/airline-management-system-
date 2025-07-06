@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login System</title>
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: teal;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-container {
+            width: 420px;
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(30px);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            padding: 40px;
+        }
+
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .error-message {
+            background-color: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .input-box {
+            position: relative;
+            width: 100%;
+            height: 50px;
+            margin: 30px 0;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 40px;
+            font-size: 16px;
+            color: white;
+            padding: 20px 45px 20px 20px;
+        }
+
+        .input-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .input-box i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .login-btn {
+            width: 100%;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            outline: none;
+            border-radius: 70px;
+            cursor: pointer;
+            font-size: 16px;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            background-color: black;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .register-link a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Home Page Styles */
+        .home-container {
+            display: none;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .home-container h1 {
+            font-size: 3em;
+            margin-bottom: 30px;
+        }
+
+        .welcome-message {
+            font-size: 1.5em;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: black;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-container" id="loginPage">
+        <h1>Login</h1>
+        
+        <div class="error-message" id="errorMessage"></div>
+        
+        <form id="loginForm">
+            <div class="input-box">
+                <input type="text" id="userId" placeholder="User ID" maxlength="5">
+                <i class='bx bxs-user'></i>
+            </div>
+            
+            <div class="input-box">
+                <input type="password" id="password" placeholder="Password" maxlength="30">
+                <i class='bx bxs-lock'></i>
+            </div>
+            
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+        
+        <div class="register-link">
+            <p>New User? <a href="#" onclick="showRegisterMessage()">Register Yourself</a></p>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div class="home-container" id="homePage">
+        <h1>Home Page</h1>
+        <div class="welcome-message">
+            <h2>Welcome <span id="welcomeUserId"></span>!</h2>
+            <p>You have successfully logged into the system.</p>
+        </div>
+        
+        <div class="user-info">
+            <h3>User Information</h3>
+            <p><strong>User ID:</strong> <span id="currentUserId"></span></p>
+            <p><strong>Login Time:</strong> <span id="loginTime"></span></p>
+            <p><strong>Status:</strong> Active</p>
+        </div>
+        
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        // Static user credentials for validation
+        const validUsers = {
+            '12345': 'password123',
+            '67890': 'admin2024',
+            '11111': 'user2024'
+        };
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const loginPage = document.getElementById('loginPage');
+        const homePage = document.getElementById('homePage');
+        const welcomeUserId = document.getElementById('welcomeUserId');
+        const currentUserId = document.getElementById('currentUserId');
+        const loginTime = document.getElementById('loginTime');
+
+        // Current logged in user
+        let currentUser = null;
+
+        // Form validation and submission
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const userId = document.getElementById('userId').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            // Reset error message
+            hideError();
+            
+            // Validation
+            if (!userId || !password) {
+                showError('Both User ID and Password are required');
+                return;
+            }
+            
+            // User ID validation
+            if (!/^\d{1,5}$/.test(userId)) {
+                showError('User ID must be numeric and maximum 5 digits');
+                return;
+            }
+            
+            // Password validation
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters');
+                return;
+            }
+            
+            if (password.length > 30) {
+                showError('Password must not exceed 30 characters');
+                return;
+            }
+            
+            // Check credentials
+            validateCredentials(userId, password);
+        });
+
+        function validateCredentials(userId, password) {
+            const userExists = validUsers.hasOwnProperty(userId);
+            const passwordCorrect = userExists && validUsers[userId] === password;
+            
+            if (!userExists && !passwordCorrect) {
+                showError('Both ID/password not valid');
+            } else if (!userExists) {
+                showError('ID not valid');
+            } else if (!passwordCorrect) {
+                showError('Password not valid');
+            } else {
+                // Successful login
+                currentUser = userId;
+                showHomePage();
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+        }
+
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        function showHomePage() {
+            // Hide login page and show home page
+            loginPage.style.display = 'none';
+            homePage.style.display = 'block';
+            
+            // Update welcome message and user info
+            welcomeUserId.textContent = currentUser;
+            currentUserId.textContent = currentUser;
+            loginTime.textContent = new Date().toLocaleString();
+            
+            // Clear form
+            document.getElementById('loginForm').reset();
+            hideError();
+        }
+
+        function logout() {
+            // Reset current user
+            currentUser = null;
+            
+            // Show login page and hide home page
+            loginPage.style.display = 'block';
+            homePage.style.display = 'none';
+            
+            // Clear form and errors
+            document.getElementById('loginForm').reset();
+            hideError();
+        }
+
+        function showRegisterMessage() {
+            alert('Registration feature coming soon! Please contact administrator for account creation.');
+        }
+
+        // Input restrictions
+        document.getElementById('userId').addEventListener('input', function(e) {
+            // Allow only numeric input
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+            
+            // Limit to 5 digits
+            if (e.target.value.length > 5) {
+                e.target.value = e.target.value.slice(0, 5);
+            }
+        });
+
+        // Generate random user ID (for demonstration)
+        function generateRandomUserId() {
+            const randomId = Math.floor(Math.random() * 99999).toString().padStart(5, '0');
+            document.getElementById('userId').value = randomId;
+        }
+
+        // Add double-click to generate random ID (for testing)
+        document.getElementById('userId').addEventListener('dblclick', generateRandomUserId);
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: teal;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: white;
+    }
+
+    .register-container {
+      width: 450px;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 40px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .input-box {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .input-box input,
+    .input-box textarea {
+      width: 100%;
+      padding: 12px 40px 12px 15px;
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 30px;
+      color: white;
+      font-size: 15px;
+      box-sizing: border-box;
+      resize: none;
+    }
+
+    ::placeholder {
+      color: white;
+      opacity: 0.8;
+    }
+
+    .input-box i {
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.7);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 30px;
+      background: rgba(255,255,255,0.3);
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .btn:hover {
+      background: black;
+    }
+
+    .message {
+      margin-top: 20px;
+      text-align: center;
+      color: #7fff7f;
+      font-weight: bold;
+    }
+
+    .error {
+      color: #ff6b6b;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .login-link a {
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    <h1>Register</h1>
+    <form id="registrationForm">
+      <div class="input-box">
+        <input type="text" id="firstName" placeholder="First Name" maxlength="50">
+        <i class='bx bx-user'></i>
+      </div>
+      <div class="input-box">
+        <input type="text" id="lastName" placeholder="Last Name" maxlength="50">
+        <i class='bx bx-user'></i>
+      </div>
+      <div class="input-box">
+        <input type="date" id="dob" placeholder="DOB">
+        <i class='bx bx-calendar'></i>
+      </div>
+      <div class="input-box">
+        <input type="text" id="email" placeholder="Email ID">
+        <i class='bx bx-envelope'></i>
+      </div>
+      <div class="input-box">
+        <textarea id="address" placeholder="Address" maxlength="100" rows="2"></textarea>
+        <i class='bx bx-map'></i>
+      </div>
+      <div class="input-box">
+        <input type="text" id="contact" placeholder="Contact Number" maxlength="10">
+        <i class='bx bx-phone'></i>
+      </div>
+
+      <button type="submit" class="btn">Register</button>
+      <button type="reset" class="btn" onclick="return confirmReset()">Reset</button>
+    </form>
+
+    <div id="message" class="message"></div>
+
+    <div class="login-link">
+      <p>Already Registered? <a href="sample1.html">Login Here</a></p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("registrationForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const dob = new Date(document.getElementById("dob").value);
+      const email = document.getElementById("email").value.trim();
+      const address = document.getElementById("address").value.trim();
+      const contact = document.getElementById("contact").value.trim();
+
+      const message = document.getElementById("message");
+      message.classList.remove("error");
+      message.style.color = "#7fff7f";
+      message.textContent = "";
+
+      if (!firstName || !lastName || !dob || !email || !address || !contact) {
+        showError("All fields are mandatory.");
+        return;
+      }
+
+      const minDate = new Date("1924-01-01");
+      if (dob <= minDate) {
+        showError("Choose a date greater than 1/1/1924");
+        return;
+      }
+
+      if (!/^[0-9]{10}$/.test(contact)) {
+        showError("Enter a valid 10-digit contact number");
+        return;
+      }
+
+      const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+      if (!emailRegex.test(email)) {
+        showError("Enter a valid email ID");
+        return;
+      }
+
+      const passengerId = Math.floor(10000 + Math.random() * 90000);
+      const password = firstName.substring(0, 4) + "@123";
+
+      message.style.color = "#7fff7f";
+      message.innerHTML = `
+        Registration successful!<br><br>
+        <strong>Passenger ID:</strong> ${passengerId}<br>
+        <strong>Password:</strong> ${password}
+      `;
+    });
+
+    function showError(msg) {
+      const message = document.getElementById("message");
+      message.classList.add("error");
+      message.textContent = msg;
+    }
+
+    function confirmReset() {
+      return confirm("Is it okay to reset all fields?");
+    }
+  </script>
+</body>
+</html>

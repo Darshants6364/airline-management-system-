@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirLineManagementSystem - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .welcome-header {
+            text-align: right;
+            color: #667eea;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .app-title {
+            text-align: center;
+            color: white;
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 2rem 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+        }
+
+        .search-title {
+            text-align: center;
+            color: #333;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .search-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group input {
+            padding: 0.75rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .submit-button {
+            grid-column: 1 / -1;
+            justify-self: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 3rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .profile-modal,
+        .trips-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .profile-details {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .profile-field {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .edit-btn, .save-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        .trips-links {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .trip-link {
+            padding: 0.75rem 1.5rem;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .trip-link.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .trip-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .trip-table th,
+        .trip-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .trip-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .app-title {
+                font-size: 2rem;
+            }
+
+            .search-form {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="#" class="active" onclick="showHome()">Home</a></li>
+                <li><a href="#" onclick="showProfile()">My Profile</a></li>
+                <li><a href="#" onclick="showTrips()">My Trips</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+            <div class="welcome-header">Welcome John Doe !!!</div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <h1 class="app-title">AirLineManagementSystem</h1>
+        
+        <div class="search-section">
+            <h2 class="search-title">Search Flights</h2>
+            <form class="search-form" onsubmit="searchFlights(event)">
+                <div class="form-group">
+                    <label for="origin">Origin</label>
+                    <select id="origin" name="origin" required>
+                        <option value="">Select Origin</option>
+                        <option value="NYC">New York (NYC)</option>
+                        <option value="LAX">Los Angeles (LAX)</option>
+                        <option value="CHI">Chicago (CHI)</option>
+                        <option value="MIA">Miami (MIA)</option>
+                        <option value="SEA">Seattle (SEA)</option>
+                        <option value="BOS">Boston (BOS)</option>
+                        <option value="DEN">Denver (DEN)</option>
+                        <option value="SFO">San Francisco (SFO)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <select id="destination" name="destination" required>
+                        <option value="">Select Destination</option>
+                        <option value="NYC">New York (NYC)</option>
+                        <option value="LAX">Los Angeles (LAX)</option>
+                        <option value="CHI">Chicago (CHI)</option>
+                        <option value="MIA">Miami (MIA)</option>
+                        <option value="SEA">Seattle (SEA)</option>
+                        <option value="BOS">Boston (BOS)</option>
+                        <option value="DEN">Denver (DEN)</option>
+                        <option value="SFO">San Francisco (SFO)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="departure">Departure Date</label>
+                    <input type="date" id="departure" name="departure" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="travelers">No. of Travelers</label>
+                    <input type="number" id="travelers" name="travelers" min="1" max="10" value="1" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="class">Class</label>
+                    <select id="class" name="class" required>
+                        <option value="">Select Class</option>
+                        <option value="Economy">Economy</option>
+                        <option value="Executive">Executive</option>
+                        <option value="Business">Business</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="submit-button">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profileModal" class="profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">My Profile</h2>
+                <button class="close-btn" onclick="closeProfile()">&times;</button>
+            </div>
+            <div class="profile-details">
+                <div class="profile-field">
+                    <span><strong>Name:</strong></span>
+                    <span id="profileName">John Doe</span>
+                </div>
+                <div class="profile-field">
+                    <span><strong>Email:</strong></span>
+                    <span id="profileEmail">john.doe@email.com</span>
+                </div>
+                <div class="profile-field">
+                    <span><strong>Phone:</strong></span>
+                    <span id="profilePhone">+1-555-123-4567</span>
+                </div>
+                <div class="profile-field">
+                    <span><strong>Address:</strong></span>
+                    <span id="profileAddress">123 Main St, New York, NY 10001</span>
+                </div>
+                <div class="profile-field">
+                    <span><strong>Date of Birth:</strong></span>
+                    <span id="profileDob">1990-01-15</span>
+                </div>
+                <button class="edit-btn" onclick="editProfile()">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trips Modal -->
+    <div id="tripsModal" class="trips-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">My Trips</h2>
+                <button class="close-btn" onclick="closeTrips()">&times;</button>
+            </div>
+            <div class="trips-links">
+                <button class="trip-link active" onclick="showTripType('upcoming')">Upcoming</button>
+                <button class="trip-link" onclick="showTripType('cancelled')">Cancelled</button>
+                <button class="trip-link" onclick="showTripType('completed')">Completed</button>
+            </div>
+            <div id="tripContent">
+                <table class="trip-table">
+                    <thead>
+                        <tr>
+                            <th>Flight Name</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Travel Date</th>
+                            <th>Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tripTableBody">
+                        <!-- Content will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample trip data
+        const tripData = {
+            upcoming: [
+                { flightName: "AA101", origin: "NYC", destination: "LAX", travelDate: "2025-08-15", price: "$450" },
+                { flightName: "DL205", origin: "CHI", destination: "MIA", travelDate: "2025-09-20", price: "$320" },
+                { flightName: "UA350", origin: "SFO", destination: "SEA", travelDate: "2025-10-10", price: "$280" }
+            ],
+            cancelled: [
+                { flightName: "SW123", origin: "BOS", destination: "DEN", travelDate: "2025-07-08", price: "$380" },
+                { flightName: "JB456", origin: "LAX", destination: "NYC", travelDate: "2025-07-22", price: "$420" },
+                { flightName: "AA789", origin: "MIA", destination: "CHI", travelDate: "2025-08-05", price: "$350" }
+            ],
+            completed: [
+                { flightName: "DL101", origin: "NYC", destination: "BOS", travelDate: "2025-06-15", price: "$200" },
+                { flightName: "UA202", origin: "LAX", destination: "SFO", travelDate: "2025-05-28", price: "$150" },
+                { flightName: "SW303", origin: "CHI", destination: "DEN", travelDate: "2025-04-12", price: "$300" }
+            ]
+        };
+
+        // Set minimum date to today
+        document.getElementById('departure').min = new Date().toISOString().split('T')[0];
+
+        function showHome() {
+            // Refresh the page or show home content
+            location.reload();
+        }
+
+        function showProfile() {
+            document.getElementById('profileModal').style.display = 'block';
+        }
+
+        function closeProfile() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function editProfile() {
+            alert('Edit functionality would be implemented here. This would make the profile fields editable with input fields and a save button.');
+        }
+
+        function showTrips() {
+            document.getElementById('tripsModal').style.display = 'block';
+            showTripType('upcoming');
+        }
+
+        function closeTrips() {
+            document.getElementById('tripsModal').style.display = 'none';
+        }
+
+        function showTripType(type) {
+            // Update active button
+            const buttons = document.querySelectorAll('.trip-link');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update table content
+            const tbody = document.getElementById('tripTableBody');
+            tbody.innerHTML = '';
+            
+            tripData[type].forEach(trip => {
+                const row = tbody.insertRow();
+                row.insertCell(0).textContent = trip.flightName;
+                row.insertCell(1).textContent = trip.origin;
+                row.insertCell(2).textContent = trip.destination;
+                row.insertCell(3).textContent = trip.travelDate;
+                row.insertCell(4).textContent = trip.price;
+            });
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                alert('Redirecting to login page...');
+                // Here you would redirect to the login page
+                // window.location.href = 'login.html';
+            }
+        }
+
+        function searchFlights(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const searchData = Object.fromEntries(formData);
+            
+            // Validate that origin and destination are different
+            if (searchData.origin === searchData.destination) {
+                alert('Origin and destination cannot be the same!');
+                return;
+            }
+            
+            alert(`Searching flights from ${searchData.origin} to ${searchData.destination} on ${searchData.departure} for ${searchData.travelers} traveler(s) in ${searchData.class} class.`);
+            // Here you would implement the actual search functionality
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const profileModal = document.getElementById('profileModal');
+            const tripsModal = document.getElementById('tripsModal');
+            
+            if (event.target === profileModal) {
+                profileModal.style.display = 'none';
+            }
+            if (event.target === tripsModal) {
+                tripsModal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
